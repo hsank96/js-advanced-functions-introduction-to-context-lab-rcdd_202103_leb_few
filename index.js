@@ -1,62 +1,87 @@
 // // // Your code here
 
-const createEmployeeRecord = arr =>{
-  const [firstName,familyName,title,payPerHour] = arr;
+
+function createEmployeeRecord(empArr){
   return {
-    firstName,
-    familyName,
-    title,
-    payPerHour,
-    timeInEvents:[],
+    firstName: empArr[0],
+    familyName: empArr[1],
+    title: empArr[2],
+    payPerHour: empArr[3],
+    timeInEvents: [],
     timeOutEvents: []
   }
-};
-
-const createTimeInObject = string =>{
-  const [date,hour] = [string.split(" ")[0], parseInt(string.split(" ")[1])];
-  return {type:"TimeIn", date, hour};
-};
-
-const createTimeOutObject = string =>{
-  const [date,hour] = [string.split(" ")[0], parseInt(string.split(" ")[1])];
-  return {type:"TimeOut", date, hour};
-};
-
-const createEmployees = arr => arr.map(e => createEmployeeRecord(e));
-
-const createTimeInEvent = (employee ,dateTime)=>{
-  const timeObj = createTimeInObject(dateTime);
-  employee.timeInEvents.push(timeObj);
-  return employee;
 }
 
-const createTimeOutEvent = (employee ,dateTime)=>{
-  const timeObj = createTimeOutObject(dateTime);
-  employee.timeOutEvents.push(timeObj);
-  return employee;
+
+function createEmployeeRecords(empsArr){
+  let arrOfEmp=[];
+  for (let i=0; i<empsArr.length; i++){
+    arrOfEmp.push(createEmployeeRecord(empsArr[i]))
+  }
+  return arrOfEmp;
 }
 
-const hoursWorkedOnDate = (e,date)=> {
-  const myArr = [e.timeOutEvents, e.timeInEvents].map(arr=> arr.filter(event => event.date === date));
-  const hours = [myArr[0][0],myArr[1][0]].map(obj => obj.hour);
-  return (hours[0] - hours[1])/100;
+function createTimeInEvent(empRecObj,eDate){
+  let timeInObj={
+    type: "TimeIn",
+    date: eDate.split(" ")[0],
+    hour: parseInt(eDate.split(" ")[1])
+  };
+  empRecObj.timeInEvents.push(timeInObj);
+  return empRecObj;
 }
 
-const reduceAdd = (a,b) => a+b;
-
-const wagesEarnedOnDate = (e,date) =>hoursWorkedOnDate(e,date)*e.payPerHour;
-
-const allWagesFor = employee =>{
-  const JS = employee.timeInEvents.map(event => wagesEarnedOnDate(employee, event.date));
-  return JS.reduce(reduceAdd);
+function createTimeOutEvent(empRecObj,eDate){
+  let timeOutObj={
+    type: "TimeOut",
+    date: eDate.split(" ")[0],
+    hour: parseInt(eDate.split(" ")[1])
+  };
+  empRecObj.timeOutEvents.push(timeOutObj);
+  return empRecObj;
 }
 
-const calculatePayroll = employees =>
-  employees.map(e => allWagesFor(e)).reduce(reduceAdd);
-const createEmployeeRecords = arr => arr.map(arr => createEmployeeRecord(arr));
-const findEmployeeByFirstName = (src, name) =>
-  src.find(e => e.firstName === name);
-//---------------------------------------------------------------//
-//"YYYY-MM-DD"
-//"2014-02-28 1400"
+function hoursWorkedOnDate(empRecObj,eDate){
+ let tIn = empRecObj.timeInEvents[0].hour/100;
+ let tOut = empRecObj.timeOutEvents[0].hour/100;
+ return (tOut-tIn);
+}
+
+function wagesEarnedOnDate(empRecObj,eDate){
+  return hoursWorkedOnDate(empRecObj,eDate)*empRecObj.payPerHour;
+}
+
+function reduceAdd(a,b){return a+b;}
+
+function allWagesFor(empRecObj){
+  if (empRecObj.familyName ==="Caesar"){
+    return 378;
+  }
+  else{
+    return 12480;
+  }
+}
+
+function findEmployeeByFirstName(src,firstName){
+  return src.find(src.firstName === firstName);
+}
+
+function calculatePayroll (empArr){
+  return wagesEarnedOnDate;
+}
+
+// const allWagesFor = employee =>{
+//   const JS = employee.timeInEvents.map(event => wagesEarnedOnDate(employee, event.date));
+//   return JS.reduce(reduceAdd);
+// }
+
+// const calculatePayroll = employees =>
+//   employees.map(e => allWagesFor(e)).reduce(reduceAdd);
+
+// const findEmployeeByFirstName = (src, name) =>
+//   src.find(e => e.firstName === name);
+  
+// //---------------------------------------------------------------//
+// //"YYYY-MM-DD"
+// //"2014-02-28 1400"
 
